@@ -1,0 +1,16 @@
+{
+  "name": "github-oss-researcher",
+  "version": "1.0.0",
+  "description": "GitHub OSS repository researcher with Claude AI scoring and Google Sheets output",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "axios": "^1.7.0",
+    "dotenv": "^16.4.0",
+    "googleapis": "^144.0.0"
+  }
+}
