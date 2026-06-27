@@ -21,21 +21,22 @@ async function fetchReadme(owner, repo) {
   }
 }
 
+const ALLOWED_LICENSES = new Set(['MIT', 'Apache-2.0']);
+const ALLOWED_LANGUAGES = new Set(['Python', 'TypeScript', 'JavaScript']);
+
 export async function searchRepos(keyword, category) {
-  const query = [
-    keyword,
-    'language:Python OR language:TypeScript OR language:JavaScript',
-    'stars:>500',
-    'license:mit OR license:apache-2.0',
-    'pushed:>2025-01-01',
-  ].join(' ');
+  const query = `${keyword} stars:>500 pushed:>2025-01-01`;
 
   const res = await axios.get(`${GITHUB_API}/search/repositories`, {
     headers: headers(),
-    params: { q: query, sort: 'stars', order: 'desc', per_page: 20 },
+    params: { q: query, sort: 'stars', order: 'desc', per_page: 40 },
   });
 
-  const items = res.data.items || [];
+  const items = (res.data.items || []).filter(
+    (item) =>
+      ALLOWED_LICENSES.has(item.license?.spdx_id) &&
+      ALLOWED_LANGUAGES.has(item.language)
+  ).slice(0, 20);
 
   const repos = await Promise.all(
     items.map(async (item) => {
